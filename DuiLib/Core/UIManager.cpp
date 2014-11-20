@@ -638,7 +638,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
                 }
             }
             // Set focus to first control?
-            if( m_bFocusNeeded ) {
+			if (m_bFocusNeeded && GetFocus() == NULL) {
                 SetNextTabControl();
             }
             //
