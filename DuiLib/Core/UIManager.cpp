@@ -1538,6 +1538,7 @@ void CPaintManagerUI::SendNotify(TNotifyUI& Msg, bool bAsync /*= false*/)
     else {
         TNotifyUI *pMsg = new TNotifyUI;
         pMsg->pSender = Msg.pSender;
+		pMsg->sVirtualWnd = Msg.sVirtualWnd;
         pMsg->sType = Msg.sType;
         pMsg->wParam = Msg.wParam;
         pMsg->lParam = Msg.lParam;
