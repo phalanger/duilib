@@ -34,7 +34,23 @@ namespace DuiLib
 	{
 		m_pOwner = pOwner;
 		RECT rcPos = CalPos();
-		UINT uStyle = WS_CHILD | ES_AUTOHSCROLL;
+
+		UINT uStyle = 0;
+		if (m_pOwner->GetManager()->GetBackgroundSemiTransparent())
+		{
+			uStyle = WS_POPUP | ES_AUTOHSCROLL | WS_VISIBLE;
+			RECT rcWnd = { 0 };
+			::GetWindowRect(m_pOwner->GetManager()->GetPaintWindow(), &rcWnd);
+			rcPos.left += rcWnd.left;
+			rcPos.right += rcWnd.left;
+			rcPos.top += rcWnd.top;
+			rcPos.bottom += rcWnd.top;
+		}
+		else
+		{
+			uStyle = WS_CHILD | ES_AUTOHSCROLL;
+		}
+
 		if( m_pOwner->IsPasswordMode() ) uStyle |= ES_PASSWORD;
 		Create(m_pOwner->GetManager()->GetPaintWindow(), NULL, uStyle, 0, rcPos);
 		HFONT hFont=NULL;

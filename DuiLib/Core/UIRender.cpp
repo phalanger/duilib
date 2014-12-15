@@ -461,7 +461,7 @@ void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RE
 
     HDC hCloneDC = ::CreateCompatibleDC(hDC);
     HBITMAP hOldBitmap = (HBITMAP) ::SelectObject(hCloneDC, hBitmap);
-    ::SetStretchBltMode(hDC, HALFTONE);
+	int pre_bltmode = ::SetStretchBltMode(hDC, HALFTONE);
 
     RECT rcTemp = {0};
     RECT rcDest = {0};
@@ -892,6 +892,7 @@ void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RE
         }
     }
 
+	::SetStretchBltMode(hDC, pre_bltmode);
     ::SelectObject(hCloneDC, hOldBitmap);
     ::DeleteDC(hCloneDC);
 }

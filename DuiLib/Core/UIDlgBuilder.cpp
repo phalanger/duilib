@@ -187,7 +187,10 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                     else if( _tcscmp(pstrName, _T("bktrans")) == 0 ) {
                         pManager->SetBackgroundTransparent(_tcscmp(pstrValue, _T("true")) == 0);
                     } 
-                    else if( _tcscmp(pstrName, _T("disabledfontcolor")) == 0 ) {
+					else if (_tcscmp(pstrName, _T("bksemitrans")) == 0) {
+						pManager->SetBackgroundSemiTransparent(_tcscmp(pstrValue, _T("true")) == 0);
+					}
+					else if (_tcscmp(pstrName, _T("disabledfontcolor")) == 0) {
                         if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
                         LPTSTR pstr = NULL;
                         DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);

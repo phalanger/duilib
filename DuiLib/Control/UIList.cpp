@@ -2277,7 +2277,9 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
     {
         if( IsEnabled() ) {
             m_uButtonState |= UISTATE_HOT;
-            Invalidate();
+		if (m_pManager != NULL && OnNotify)
+			m_pManager->SendNotify(this, DUI_MSGTYPE_MOUSEENTER, 0, 0, true);
+			Invalidate();
         }
         return;
     }
@@ -2285,6 +2287,8 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
     {
         if( (m_uButtonState & UISTATE_HOT) != 0 ) {
             m_uButtonState &= ~UISTATE_HOT;
+		if (m_pManager != NULL && OnNotify)
+			m_pManager->SendNotify(this, DUI_MSGTYPE_MOUSELEAVE, 0, 0, true);
             Invalidate();
         }
         return;
