@@ -99,6 +99,7 @@ public:
     void PaintText(HDC hDC);
     void PaintStatusImage(HDC hDC);
 
+	void EnsureVisible(int iIndex);
 protected:
     CComboWnd* m_pWindow;
 

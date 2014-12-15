@@ -157,7 +157,7 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         event.lParam = lParam;
         event.dwTimestamp = ::GetTickCount();
         m_pOwner->DoEvent(event);
-        EnsureVisible(m_pOwner->GetCurSel());
+        //EnsureVisible(m_pOwner->GetCurSel());
         return 0;
     }
     else if( uMsg == WM_KILLFOCUS ) {
@@ -448,9 +448,16 @@ void CComboUI::DoEvent(TEventUI& event)
     }
     if( event.Type == UIEVENT_SCROLLWHEEL )
     {
-        bool bDownward = LOWORD(event.wParam) == SB_LINEDOWN;
-        SelectItem(FindSelectable(m_iCurSel + (bDownward ? 1 : -1), bDownward));
-        return;
+          bool bDownward = LOWORD(event.wParam) == SB_LINEDOWN;
+
+		  if (m_pWindow && m_items.GetSize() > 0)
+		  {
+			  CControlUI* pControl = static_cast<CControlUI*>(m_items[0]);
+			  int h = pControl->GetHeight();
+			  m_pWindow->Scroll(0, bDownward ? h : -h);
+		  }
+//          SelectItem(FindSelectable(m_iCurSel + (bDownward ? 1 : -1), bDownward));
+//         return;
     }
     if( event.Type == UIEVENT_CONTEXTMENU )
     {
@@ -461,7 +468,7 @@ void CComboUI::DoEvent(TEventUI& event)
         if( ::PtInRect(&m_rcItem, event.ptMouse ) ) {
             if( (m_uButtonState & UISTATE_HOT) == 0  )
                 m_uButtonState |= UISTATE_HOT;
-            Invalidate();
+			Invalidate();
         }
         return;
     }
@@ -469,7 +476,7 @@ void CComboUI::DoEvent(TEventUI& event)
     {
         if( (m_uButtonState & UISTATE_HOT) != 0 ) {
             m_uButtonState &= ~UISTATE_HOT;
-            Invalidate();
+			Invalidate();
         }
         return;
     }
@@ -959,6 +966,12 @@ void CComboUI::PaintText(HDC hDC)
             pControl->SetPos(rcOldPos);
         }
     }
+}
+
+void CComboUI::EnsureVisible(int iIndex)
+{
+	if (m_pWindow)
+		m_pWindow->EnsureVisible(iIndex);
 }
 
 } // namespace DuiLib
