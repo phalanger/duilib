@@ -186,6 +186,7 @@ public:
 	int GetTransparent() const;
     void SetTransparent(int nOpacity);
     void SetBackgroundTransparent(bool bTrans);
+	void SetBackgroundSemiTransparent(bool bTrans);
     bool IsShowUpdateRect() const;
     void SetShowUpdateRect(bool show);
 
@@ -316,6 +317,7 @@ public:
     bool PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
 	void UsedVirtualWnd(bool bUsed);
 
+	bool	GetBackgroundSemiTransparent() const;
 private:
     static CControlUI* CALLBACK __FindControlFromNameHash(CControlUI* pThis, LPVOID pData);
     static CControlUI* CALLBACK __FindControlFromCount(CControlUI* pThis, LPVOID pData);
@@ -331,6 +333,7 @@ private:
     HWND m_hWndPaint;
 	int m_nOpacity;
     HDC m_hDcPaint;
+	LPBYTE m_pBmpBackgroundBits;
     HDC m_hDcOffscreen;
     HDC m_hDcBackground;
     HBITMAP m_hbmpOffscreen;
@@ -358,6 +361,7 @@ private:
     bool m_bFocusNeeded;
     bool m_bOffscreenPaint;
     bool m_bAlphaBackground;
+	bool m_bSemiAlphaBackground;
     bool m_bMouseTracking;
     bool m_bMouseCapture;
 	bool m_bUsedVirtualWnd;

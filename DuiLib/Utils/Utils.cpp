@@ -409,12 +409,37 @@ namespace DuiLib
 		}
 		else {
 			if( m_pstr != m_szBuffer ) {
+				_tcscpy(m_szBuffer, m_pstr);
 				free(m_pstr);
 				m_pstr = m_szBuffer;
 			}
 			_tcscat(m_szBuffer, pstr);
 		}
 	}
+
+	LPTSTR	CDuiString::PrepareAppend(int nLength)
+	{
+		int nOldLen = GetLength();
+		int nNewLength = nOldLen + (int)nLength;
+		if (nNewLength >= MAX_LOCAL_STRING_LEN) {
+			if (m_pstr == m_szBuffer) {
+				m_pstr = static_cast<LPTSTR>(malloc((nNewLength + 1) * sizeof(TCHAR)));
+				_tcscpy(m_pstr, m_szBuffer);
+			}
+			else {
+				m_pstr = static_cast<LPTSTR>(realloc(m_pstr, (nNewLength + 1) * sizeof(TCHAR)));
+			}
+		}
+		else {
+			if (m_pstr != m_szBuffer) {
+				_tcscpy(m_szBuffer, m_pstr);
+				free(m_pstr);
+				m_pstr = m_szBuffer;
+			}
+		}
+		return m_pstr + nOldLen;
+	}
+
 
 	void CDuiString::Assign(LPCTSTR pstr, int cchMax)
 	{

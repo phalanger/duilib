@@ -145,6 +145,7 @@ namespace DuiLib
 		TCHAR GetAt(int nIndex) const;
 		void Append(LPCTSTR pstr);
 		void Assign(LPCTSTR pstr, int nLength = -1);
+		LPTSTR	PrepareAppend(int nLength);
 		LPCTSTR GetData() const;
 
 		void SetAt(int nIndex, TCHAR ch);
