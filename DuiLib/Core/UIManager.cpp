@@ -608,6 +608,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             // Should we paint?
             RECT rcPaint = { 0 };
             if( !::GetUpdateRect(m_hWndPaint, &rcPaint, FALSE) ) return true;
+
             if( m_pRoot == NULL ) {
                 PAINTSTRUCT ps = { 0 };
                 ::BeginPaint(m_hWndPaint, &ps);
@@ -623,6 +624,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
                 m_bUpdateNeeded = false;
                 RECT rcClient = { 0 };
                 ::GetClientRect(m_hWndPaint, &rcClient);
+
                 if( !::IsRectEmpty(&rcClient) ) {
                     if( m_pRoot->IsUpdateNeeded() ) {
 						if (!::IsIconic(m_hWndPaint))  //redrain修复bug
@@ -660,8 +662,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 			if (m_bSemiAlphaBackground)
 			{
 				DWORD dwExStyle = GetWindowLong(m_hWndPaint, GWL_EXSTYLE);
-				if ((dwExStyle&WS_EX_LAYERED) != 0x80000)
-					SetWindowLong(m_hWndPaint, GWL_EXSTYLE, dwExStyle^WS_EX_LAYERED);
+				if ((dwExStyle&WS_EX_LAYERED) != WS_EX_LAYERED)
+					SetWindowLong(m_hWndPaint, GWL_EXSTYLE, dwExStyle | WS_EX_LAYERED);
 
 				PAINTSTRUCT ps = { 0 };
 				::BeginPaint(m_hWndPaint, &ps);
@@ -692,8 +694,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 					ASSERT(m_hbmpBackground);
 				}
 
-				int mirrorTop = height - rcPaint.bottom;
-				int mirrorBottom = height - rcPaint.top;
+ 				int mirrorTop = height - rcPaint.bottom;
+ 				int mirrorBottom = height - rcPaint.top;
 				int mirrorLeft = rcPaint.left;
 				int mirrorRight = rcPaint.right;
 				for (int i = mirrorTop; i < mirrorBottom; ++i)
@@ -2298,7 +2300,9 @@ bool CPaintManagerUI::TranslateMessage(const LPMSG pMsg)
 	{
 		HWND hWndParent = ::GetParent(pMsg->hwnd);
 
-		for( int i = 0; i < m_aPreMessages.GetSize(); i++ ) 
+		//code by redrain 2014.12.3,解决edit和webbrowser按tab无法切换焦点的bug
+		//for( int i = 0; i < m_aPreMessages.GetSize(); i++ ) 
+		for (int i = m_aPreMessages.GetSize() - 1; i >= 0; --i)
 		{
 			CPaintManagerUI* pT = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);        
 			HWND hTempParent = hWndParent;
@@ -2309,10 +2313,10 @@ bool CPaintManagerUI::TranslateMessage(const LPMSG pMsg)
 					if (pT->TranslateAccelerator(pMsg))
 						return true;
 
-					if( pT->PreMessageHandler(pMsg->message, pMsg->wParam, pMsg->lParam, lRes) ) 
-						return true;
-
-					return false;
+					pT->PreMessageHandler(pMsg->message, pMsg->wParam, pMsg->lParam, lRes);
+					//if( pT->PreMessageHandler(pMsg->message, pMsg->wParam, pMsg->lParam, lRes) ) 
+					//	return true;
+					//return false;
 				}
 				hTempParent = GetParent(hTempParent);
 			}
