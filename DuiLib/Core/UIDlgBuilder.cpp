@@ -220,6 +220,10 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                         DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
                         pManager->SetDefaultSelectedBkColor(clrColor);
                     } 
+					else if (_tcscmp(pstrName, _T("unfocus")) == 0) {
+						if (_tcscmp(pstrName, _T("true")))
+							pManager->SetUnfocusPaintWindow(true);
+					}
                 }
             }
         }

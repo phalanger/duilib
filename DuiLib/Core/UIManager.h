@@ -254,7 +254,7 @@ public:
     const CStdStringPtrMap& GetDefaultAttribultes() const;
     void RemoveAllDefaultAttributeList();
 
-    bool AttachDialog(CControlUI* pControl);
+    bool AttachDialog(CControlUI* pControl, bool boAutoDelete = true);
     bool InitControls(CControlUI* pControl, CControlUI* pParent = NULL);
     void ReapObjects(CControlUI* pControl);
 
@@ -318,6 +318,9 @@ public:
 	void UsedVirtualWnd(bool bUsed);
 
 	bool	GetBackgroundSemiTransparent() const;
+
+	void	SetUnfocusPaintWindow(bool bo) { m_bUnfocusPaintWindow = bo;  }
+	bool	GetUnfocusPaintWindow() const { return m_bUnfocusPaintWindow; }
 private:
     static CControlUI* CALLBACK __FindControlFromNameHash(CControlUI* pThis, LPVOID pData);
     static CControlUI* CALLBACK __FindControlFromCount(CControlUI* pThis, LPVOID pData);
@@ -365,7 +368,8 @@ private:
     bool m_bMouseTracking;
     bool m_bMouseCapture;
 	bool m_bUsedVirtualWnd;
-
+	bool m_bUnfocusPaintWindow;
+	bool m_bAutoDeleteControls;
     //
     CStdPtrArray m_aNotifiers;
     CStdPtrArray m_aTimers;
