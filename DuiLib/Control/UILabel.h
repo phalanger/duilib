@@ -74,6 +74,8 @@ namespace DuiLib
 		void		SetEnabledShadow(bool _EnabledShadowe);
 		bool		GetEnabledShadow();
 		
+		bool		GetAutoCalcWidth();
+		void		SetAutoCalcWidth(bool _AutoCalcWidth);
 	protected:
 		DWORD	m_dwTextColor;
 		DWORD	m_dwDisabledTextColor;
@@ -94,6 +96,7 @@ namespace DuiLib
 		bool					m_EnableEffect;
 		bool					m_EnabledStroke;
 		bool					m_EnabledShadow;
+		bool					m_AutoCalcWidth;
 		DWORD					m_dwTextColor1;
 		DWORD					m_dwTextShadowColorA;
 		DWORD					m_dwTextShadowColorB;

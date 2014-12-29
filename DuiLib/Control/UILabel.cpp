@@ -37,6 +37,7 @@ namespace DuiLib
 		m_TransStroke(255),
 		m_dwStrokeColor(0),
 		m_EnabledShadow(false),
+		m_AutoCalcWidth(false),
 		m_GradientLength(0)
 	{
 		m_ShadowOffset.X		= 0.0f;
@@ -149,6 +150,15 @@ namespace DuiLib
 
 	SIZE CLabelUI::EstimateSize(SIZE szAvailable)
 	{
+		if (m_AutoCalcWidth)
+		{
+			RECT rect = { 0 };
+			HFONT hOldFont = (HFONT)::SelectObject(m_pManager->GetPaintDC(), m_pManager->GetFont(m_iFont));
+			::DrawText(m_pManager->GetPaintDC(), m_sText.GetData(), -1, &rect, DT_CALCRECT);
+			::SelectObject(m_pManager->GetPaintDC(), hOldFont);
+			m_cxyFixed.cx = rect.right - rect.left + m_rcTextPadding.left;
+		}
+
 		if( m_cxyFixed.cy == 0 ) return CSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 4);
 		return CControlUI::EstimateSize(szAvailable);
 	}
@@ -272,6 +282,9 @@ namespace DuiLib
 			LPTSTR pstr = NULL;
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetStrokeColor(clrColor);
+		}
+		else if (_tcscmp(pstrName, _T("autocalcwidth")) == 0) {
+			SetAutoCalcWidth(_tcscmp(pstrValue, _T("true")) == 0);
 		}
 		else CControlUI::SetAttribute(pstrName, pstrValue);
 	}
@@ -1099,6 +1112,16 @@ namespace DuiLib
 		{
 			throw "CLabelUI::GetGradientLength";
 		}
+	}
+
+	bool CLabelUI::GetAutoCalcWidth()
+	{
+		return m_AutoCalcWidth;
+	}
+
+	void CLabelUI::SetAutoCalcWidth(bool _AutoCalcWidth)
+	{
+		m_AutoCalcWidth = _AutoCalcWidth;
 	}
 
 }
